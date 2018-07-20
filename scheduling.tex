@@ -104,5 +104,90 @@ anchorcolor = blue]{hyperref}
 \date{\empty}
 
 \begin{document}
-Hello
+\textbf{Timetable Design Problem}
+This problem has the following instance:
+\begin{itemize}
+	\item A set $H$ of work-periods.
+	\item A set $W$ of workers.
+	\item A set $T$ of tasks. 
+	\item For each $w \in W$, a set $A(w) \ssteq H$ for when $w$ is able to work. 
+	\item For each $t \in T$, a set $A(t)$ for when each task $t$ is available to be completed. 
+	\item For each pair $(w,t) \in W\times T$ a number $R(w,t) \in \Z_0^+$ referring to number of times a worker $w$ has to work at task $t$. 
+\end{itemize}
+
+The corresponding decision problem is:
+
+Is there a timetable for completing all tasks? The answer is in the form of a function $\func{f}{W\times T\times H}{\{0,1\}}$ where $f(w,t,h) = 1$ means that a worker $w$ works on task $t$ at time $h$. This function has to be subject ot the following constraints:
+
+\begin{enumerate}
+	\item $f(w,t,h) = 1$ only if $h \in A(w) \cap A(t)$. 
+	\item  For each $h \in H$ and $w \in W$, there is at most one $t \in T$ for which $f(w,t,h) = 1$. 
+	\item For each $h \in H$ and $t \in T$, there is at most $w \in W$ for which $f(w,t,h) = 1$.
+	\item  For each pair $(w,t) \in W \times T$ there are exactly $R(w,t)$ values of $h$ for which $f(w,t,h) = 1$. 
+\end{enumerate}
+
+
+This problem is known to be NP-complete. You could get rid of requirement 3. I am not 100\% sure if this makes the problem easier or not. It might lead to trivial positive answers where every worker is working on 1 task. You might want have a number $M(t)$ for the maximum number of workers that can work on a task. I think with this additional criteria, we are back at the original problem since a task $t$ can be split into tasks $t_1, \ldots t_{M(t)}$. One thing this problem does not include is making sure every task is completed. 
+
+\textbf{Basis Timetable Problem}
+This problem has the following instance:
+\begin{enumerate}
+	\item A set $H$ of work-periods.
+	\item A set $W$ of workers.
+	\item A set $T$ of tasks.  
+	\item For each $w \in W$, a set $A(w) \ssteq H$ for when $w$ is able to work. 
+	\item For each $t \in T$, a set $A(t)$ for when each task $t$ is available to be completed. 
+	\item A number $L(w) \in \Z_0^+$ for each $w \in W$ for the maximum number of tasks $w$ can work on. 
+	\item A number $S(t) \in \Z_0^+$ for each $t \in T$ which is the maximum number of times to perform a task (i.e. different workers on the same task. These tasks are allowed to happen at different times unlike the comment for the previous problem I made.)
+	\item A function $\func{A}{W \times T}{\{\text{true, false}\}}$ that determines if a worker can perform a task. The function is $A$ for adept.
+\end{enumerate}
+The corresponding decision problem is:
+
+Is there a timetable for completing all the tasks? Is there a function $\func{f}{W\times T\times H}{\{0,1\}}$ as defined above that satisfies the following constraints. 
+
+\begin{enumerate}
+	\item $f(w,t,h) = 1$ only if $h \in A(w) \cap A(t)$.  
+	\item  For each $h \in H$ and $w \in W$, there is at most one $t \in T$ for which $f(w,t,h) = 1$. 
+	\item For each $w \in W, t \in T$ and $h \in H f(w,t,h) = 1$ only if $A(w,t) = $ true.
+	\item For each $w \in W, \sum_{t,h} f(w,t,h) \le L(w)$.
+	\item For each $t \in T, \sum_{w,h} f(w,t,h) \le S(t)$. 
+\end{enumerate}
+
+This problem is in P so there is a polynomial time algorithm that finds a solution to this problem. I believe it is constructive, I will have to read more. 
+
+\textbf{Extended Timetable Problem}
+This problem has the following instance:
+\begin{itemize}
+	\item A set $H$ of work-periods.
+	\item A set $W$ of workers.
+	\item A set $T$ of tasks.  
+	\item A set $R$ of resources.
+	\item For each $w \in W$, a set $A(w) \ssteq H$ for when $w$ is able to work.
+	\item For each $t \in T$, a set $A(t)$ for when each task $t$ is available to be completed. 
+	\item For each $r \in R$, a set $A(r) \ssteq H$ for when $r$ is available.
+	\item A number $L(w) \in \Z_0^+$ for each $w \in W$ for the maximum number of tasks $w$ can work on. 
+	\item A number $S(t) \in \Z_0^+$ for each $t \in T$ which is the maximum number of times to perform a task
+	\item A number $U(r) \in \Z_0^+$ for each $r \in R$ which is the maximum number of tasks a resource can complete. (i.e., a supercomputer may only be able to run 1 job at a time)
+	\item A function $\func{A}{W \times T}{\{\text{true, false}\}}$ that determines if a worker can perform a task. The function is $A$ for adept.
+	\item A function $\func{RS}{T\times R}{\{\text{true, false}\}}$ for resource suitability where $RS(t,r)$ is true if a resource $r$ can be used for task $t$. 
+\end{itemize}
+
+This problem has the associated question:
+
+Is there a timetable for completing all the tasks? Is there a function $\func{f}{W\times T\times H \times R}{\{0,1\}}$ where $f(w,t,h,r) = 1$ meaning worker $w$ completes task $t$ at time $h$ with resource $r$subject to the following constraints. 
+\begin{enumerate}
+	\item $f(w,t,h,r) = 1$ only if $h \in A(w) \cap A(t) \cap A(r)$. 
+	\item For each pair $(w,h) \in W \times H$, there is at most one pair $(t,r) \in T \times R$ for which $f(w,t,h,r) = 1$. 
+	\item For each pair $(r,h) \in R\times H$ there is at most one pair $(w,t) \in W \times T$ for which $f(w,t,h,r) = 1$. 
+	\item For each $w \in W, t \in T, r \in R$ and $h \in H, f(w,t,h,r) = 1$ only if $A(w,t) =$ true.
+	\item For each $w \in W, t \in T, r \in R$ and $h \in H, f(w,t,h,r) = 1$ only if $RS(t,r) = $ true.
+	\item For each $w \in W, \sum_{t,h,r} f(w,t,h,r) \le L(w)$.
+	\item For each $t \in T, \sum_{w,h,r} f(w,t,h,r) \le S(t)$.  
+	\item For each $r \in R, \sum_{w,t,h} f(w,t,h,r) \le U(t)$.
+\end{enumerate}
+This problem is NP-complete.
+
+These definitions came from \cite{lovelace2010complexity}. 
+\bibliographystyle{plain}
+\bibliography{biblio}
 \end{document}
