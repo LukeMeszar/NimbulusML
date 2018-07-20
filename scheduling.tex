@@ -1,0 +1,108 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage[alphabetic]{amsrefs}
+\usepackage{mathrsfs,comment}
+\usepackage{float}
+\usepackage[all,arc,2cell]{xy}
+\usepackage{enumerate}
+\usepackage{tcolorbox}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{MnSymbol}
+\usepackage{pdfpages}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,calc,positioning}
+\usepackage[colorlinks = true,
+linkcolor = blue,
+urlcolor  = blue,
+citecolor = blue,
+anchorcolor = blue]{hyperref}
+
+\usepackage{cleveref}
+
+
+%theoremstyle{plain} --- default
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+
+
+
+\makeatother
+\numberwithin{equation}{section}
+
+
+
+%%%Commands and shortcuts%%%%
+%
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\xb}{\mathbf{x}}
+\newcommand{\yb}{\mathbf{y}}
+\newcommand{\ab}{\mathbf{a}}
+\newcommand{\zb}{\mathbf{z}}
+\newcommand{\func}[3]{#1\colon #2 \rightarrow #3}
+\newcommand{\sumn}{\sum_{i=1}^{n}}
+\newcommand{\innerp}[2]{\langle #1,#2 \rangle}
+\newcommand{\dsq}{d_{sq}}
+\newcommand{\dtc}{d_{tc}}
+\newcommand{\ifff}{if and only if }
+\newcommand{\st}{such that }
+\newcommand{\te}{there exists }
+\newcommand{\wrt}{with respect to }
+\newcommand{\wloG}{without loss of generality }
+\newcommand{\Wlog}{Without loss of generality }
+\newcommand{\ssteq}{\subseteq}
+\newcommand{\setst}{\hspace{1mm} | \hspace{1mm} }
+\newcommand{\Bs}{\mathscr{B}}
+\newcommand{\Us}{\mathscr{U}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Pc}{\mathcal{P}}
+\newcommand{\Sc}{\mathcal{S}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\Lc}{\mathcal{L}}
+\newcommand{\onen}{\{1,\ldots,n\}}
+\newcommand{\finv}[2]{#1^{-1}\left(#2\right)}		
+\newcommand{\es}{\varnothing}	
+\newcommand{\ol}[1]{\overline{#1}}	
+\newcommand{\xnn}{(\mathbf{x}_n)_{n \in \N}}
+\newcommand{\sft}{\mathbf{SFT_1}}		
+\newcommand{\cop}{\sqcup}	
+\newcommand{\cyc}[1]{#1_1\ldots #1_n#1_1}	
+\newcommand{\pcyc}[2]{#2(#1_1)\ldots #2(#1_n)#2(#1_1)}	
+\newcommand{\cyci}[2]{#1_1\ldots #1_{#2}#1_1}
+\newcommand{\pcyci}[3]{#3(#1_1)\ldots #3(#1_{#2})#3(#1_1)}
+\newcommand{\xh}{\bar{x}}	
+\newcommand{\yh}{\bar{y}}		
+\newcommand{\equivcls}[1]{#1/{\sim}}																																													
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Bd}{Bd}
+\DeclareMathOperator{\Int}{Int}
+\DeclareMathOperator{\id}{id}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\title{Scheduling}
+\author{Luke Meszar}
+\date{\empty}
+
+\begin{document}
+Hello
+\end{document}

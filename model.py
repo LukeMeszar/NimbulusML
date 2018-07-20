@@ -65,13 +65,13 @@ def process_time_data(time_data):
     X = v.fit_transform(datatime_data)
     return X.flatten()
 def k_means(data):
-    k = 16
+    k = 4
     kmeans = KMeans(n_clusters=k, random_state=0).fit(data)
     y_kmeans = kmeans.predict(data)
     plt.scatter(data[:, 0], data[:, 1], c=y_kmeans, s=50, cmap='viridis')
     centers = kmeans.cluster_centers_
     plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5)
-    plt.savefig('kmean' + str(k) + '.png')
+    plt.savefig('kmean_wout_user' + str(k) + '.png')
 
 if __name__ == '__main__':
     accentus_data = read_csv('AccentusActivityLoggerTrace.csv')
@@ -80,5 +80,5 @@ if __name__ == '__main__':
     action_data_t = process_action_data(separated_data.get('action',[]))
     user_id_data_t = process_user_id_data(separated_data.get('user_id',[]))
     time_data_t = process_time_data(separated_data.get('time',[]))
-    combined_data = np.array(list(zip(module_data_t, action_data_t, user_id_data_t, time_data_t)))
+    combined_data = np.array(list(zip(module_data_t, action_data_t, time_data_t)))
     k_means(combined_data)
