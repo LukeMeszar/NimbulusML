@@ -1,0 +1,206 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage[alphabetic]{amsrefs}
+\usepackage{mathrsfs,comment}
+\usepackage{float}
+\usepackage[all,arc,2cell]{xy}
+\usepackage{enumerate}
+\usepackage{tcolorbox}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{MnSymbol}
+\usepackage{pdfpages}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,calc,positioning}
+\usepackage[colorlinks = true,
+linkcolor = blue,
+urlcolor  = blue,
+citecolor = blue,
+anchorcolor = blue]{hyperref}
+
+\usepackage{cleveref}
+
+
+%theoremstyle{plain} --- default
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+
+\newlength\mystoreparindent
+\newenvironment{myparindent}[1]{%
+	\setlength{\mystoreparindent}{\the\parindent}
+	\setlength{\parindent}{#1}
+}{%
+	\setlength{\parindent}{\mystoreparindent}
+}
+
+\makeatother
+\numberwithin{equation}{section}
+
+
+
+%%%Commands and shortcuts%%%%
+%
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\xb}{\mathbf{x}}
+\newcommand{\yb}{\mathbf{y}}
+\newcommand{\ab}{\mathbf{a}}
+\newcommand{\zb}{\mathbf{z}}
+\newcommand{\func}[3]{#1\colon #2 \rightarrow #3}
+\newcommand{\sumn}{\sum_{i=1}^{n}}
+\newcommand{\innerp}[2]{\langle #1,#2 \rangle}
+\newcommand{\dsq}{d_{sq}}
+\newcommand{\dtc}{d_{tc}}
+\newcommand{\ifff}{if and only if }
+\newcommand{\st}{such that }
+\newcommand{\te}{there exists }
+\newcommand{\wrt}{with respect to }
+\newcommand{\wloG}{without loss of generality }
+\newcommand{\Wlog}{Without loss of generality }
+\newcommand{\ssteq}{\subseteq}
+\newcommand{\setst}{\hspace{1mm} | \hspace{1mm} }
+\newcommand{\Bs}{\mathscr{B}}
+\newcommand{\Us}{\mathscr{U}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\Pc}{\mathcal{P}}
+\newcommand{\Sc}{\mathcal{S}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\Lc}{\mathcal{L}}
+\newcommand{\onen}{\{1,\ldots,n\}}
+\newcommand{\finv}[2]{#1^{-1}\left(#2\right)}		
+\newcommand{\es}{\varnothing}	
+\newcommand{\ol}[1]{\overline{#1}}	
+\newcommand{\xnn}{(\mathbf{x}_n)_{n \in \N}}
+\newcommand{\sft}{\mathbf{SFT_1}}		
+\newcommand{\cop}{\sqcup}	
+\newcommand{\cyc}[1]{#1_1\ldots #1_n#1_1}	
+\newcommand{\pcyc}[2]{#2(#1_1)\ldots #2(#1_n)#2(#1_1)}	
+\newcommand{\cyci}[2]{#1_1\ldots #1_{#2}#1_1}
+\newcommand{\pcyci}[3]{#3(#1_1)\ldots #3(#1_{#2})#3(#1_1)}
+\newcommand{\xh}{\bar{x}}	
+\newcommand{\yh}{\bar{y}}		
+\newcommand{\equivcls}[1]{#1/{\sim}}																																													
+
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Bd}{Bd}
+\DeclareMathOperator{\Int}{Int}
+\DeclareMathOperator{\id}{id}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\title{Scheduling}
+\author{Luke Meszar}
+\date{\empty}
+
+\begin{document}
+\begin{myparindent}{0pt}
+	\textbf{Notation Reference}
+	
+	\textbf{Deterministic}
+	
+	Number of jobs: $n$
+	
+	Number of machines: $m$
+	
+	Job usually denoted by $j$
+	
+	Machine usually denoted by $i$
+	
+	Processing time for job $j$ on machine $i$: $p_{ij}$
+	
+	Release date: $r_j$
+	
+	Due date: $d_j$
+	
+	Weight denoting importance of job: $w_j$.
+	
+	Problem denoted by triple $\alpha | \beta | \gamma$ where $\alpha$ describes machine environment, $\beta$ is processing characteristics, $\gamma$ is objective to be minimized
+	
+	Single machine: 1
+	
+	Identical machines in parallel: $Pm$
+	
+	Machines in parallel with different speeds: $Qm$ speed is denoted by $v_i$
+	
+	Unrelated machines in parallel: $Rm$. Machine $i$ can process $j$ at speed $v_{ij}$
+	
+	Flow shop: $Fm$, all jobs have to follow same route through machines. 
+	
+	Flexible flow shop: $FFc$ there are parallel columns of machines in series
+	
+	Job shop $Jm$ each job follows its own predetermined route
+	
+	Flexible job shop: $FJc$ 
+	
+	Open shop: $Om$ there are $m$ machines and each job needs to be processed by all of them but can be done in any order
+	
+	Preemptions: $prmp$ It is not necessary to keep a job in a machine until completion
+	
+	Precedence constraints: $prec$ Jobs have precedence
+	
+	Sequence dependent setup times: $s_{jk}$
+	
+	Job families: $fmls$. Jobs in one family can be processed without any setup between but switching families caused setup time
+	
+	Batch processing $batch(b)$
+	
+	Breakdowns $brkdwn$ 
+	
+	Machine eligibility restrictions: $M_j$ only $M_j$ machines can process job $j$
+	
+	Permutation: $prmu$ FIFO
+	
+	Blocking: $block$
+	
+	No-wait: $(nwt)$ Jobs can't wait between two successive machines 
+	
+	Recirculation: $rcrc$ A job can visit a machine more than once
+	
+	Completion time of job $j$ on machine $i$: $C_{ij}$
+	
+	Time when job $j$ exits system: $C_j$
+	
+	Lateness: $L_j = C _j - d_j$
+	
+	Tardiness: $T_j = \max(C_j - d_j,0) = \max(L_j,0)$
+	
+	Unit penalty: 
+	\begin{equation*}
+	U_j = \begin{cases}
+	1 \text{ if } C_j > d_j \\
+	0 \text{ otherwise}
+	\end{cases}
+	\end{equation*}
+	
+	Makespan: $C_{\max} = \max(C_1,\ldots,C_n)$ time of last job to leave system
+	
+	Maximum lateness: $L_{\max} = \max(L_1,\ldots,L_n)$
+	
+	Total weighted completion time: $\sum w_jC_j$
+	
+	Discount total weighted completion time: $\sum w_j(10e^{-rC_j})$
+	
+	Total weighted tardiness: $\sum w_jU_j$
+	
+	Weighted number of tardy jobs $\sum w_j U_j$
+	
+	Earliness: $E_j = \max(d_j - C_j, 0)$
+\end{myparindent}
+\end{document}

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from networkx.algorithms.flow import edmonds_karp
 
 def build_graph(H,W,T,Aw,At,S,L,A):
-    G = nx.DiGraph()
+    G = nx.OrderedDiGraph()
     TxH = [(a,b) for a in T for b in H]
     WxH = [(a,b) for a in W for b in H]
     nodes_list = ["source"] + T + TxH + WxH + W + ["sink"]
@@ -42,10 +42,12 @@ def build_graph(H,W,T,Aw,At,S,L,A):
     #add edges from W to sink
     for i in range(len(W)):
         G.add_edge(W[i], "sink", capacity=L[i])
+    print(G.edges())
     return G
 
 def max_flow(G):
     flow_value, flow_dict = nx.maximum_flow(G, 'source', 'sink')
+    print(flow_value)
     return flow_dict
 
 def build_timetable(G,flow_dict, H,W,T):
@@ -60,6 +62,7 @@ def build_timetable(G,flow_dict, H,W,T):
         if value == 1:
             print(key, value)
 
+
 if __name__ == '__main__':
     H = ["h1", "h2", "h3"]
     W = ["w1", "w2", "w3", "w4"]
@@ -70,11 +73,11 @@ if __name__ == '__main__':
     Aw4 = ["h2", "h3"]
     Aw = [Aw1,Aw2,Aw3,Aw4]
     At1 = ["h1", "h3"]
-    At2 = ["h1" ]
+    At2 = ["h1", "h2", "h3"]
     At3 = ["h1", "h2", "h3"]
     At4 = ["h1", "h2", "h3"]
     At = [At1,At2,At3,At4]
-    S = [2,3,3,3]
+    S = [2,3,5,3]
     L = [2,3,3,2]
     A = [[True,True,False,True], [True,False,True,True], [False,True,True,True], [True,True,True,True]] #TxW
     G = build_graph(H,W,T,Aw,At,S,L,A)
