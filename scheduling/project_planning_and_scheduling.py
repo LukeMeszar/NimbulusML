@@ -127,10 +127,11 @@ def backward_procedure(job_list, job_schedule_list, c_max):
             backward_procedure_rec(job)
     print(latest_starting_time_dict)
     for js in job_schedule_list:
-        print(js.job_name, js.earliest_starting_time, js.earliest_completion_time, js.latest_starting_time, js.latest_completion_time)
+        print(js.job_name, js.earliest_starting_time, js.earliest_completion_time, js.latest_completion_time, js.latest_starting_time)
     return job_schedule_list
 
 if __name__ == '__main__':
     job_list = parse_data()
     job_schedule_list, c_max = forward_procedure(job_list)
+    print("cmax", c_max)
     backward_procedure(job_list, job_schedule_list,c_max)
