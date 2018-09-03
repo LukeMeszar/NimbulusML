@@ -1,4 +1,5 @@
 import math
+import networkx as nx
 
 class Job:
     def __init__(self, job_name, duration, successors, predecessors):
@@ -125,13 +126,47 @@ def backward_procedure(job_list, job_schedule_list, c_max):
     for job in job_list:
         if job.successors != ['e']:
             backward_procedure_rec(job)
-    print(latest_starting_time_dict)
-    for js in job_schedule_list:
-        print(js.job_name, js.earliest_starting_time, js.earliest_completion_time, js.latest_completion_time, js.latest_starting_time)
     return job_schedule_list
+
+def find_critical_jobs(job_schedule_list):
+    critical_jobs_list = []
+    time_zero_critical_jobs = []
+    for js in job_schedule_list:
+        if js.earliest_starting_time == js.latest_starting_time:
+            critical_jobs_list.append(js)
+            if js.earliest_starting_time == 0:
+                time_zero_critical_jobs.append(js)
+    return critical_jobs_list, time_zero_critical_jobs
+
+def find_critical_paths(critical_jobs_list, time_zero_critical_jobs, job_list):
+    def find_job_predecessors(job):
+        for j in job_list:
+            if j.job_name == job.job_name:
+                return j.successors
+
+    critical_jobs_graph = nx.DiGraph()
+    for job in critical_jobs_list:
+        critical_jobs_graph.add_node(job.job_name)
+    for job in critical_jobs_list:
+        successors = find_job_predecessors(job)
+        for successor in successors:
+            if successor != 'e' and successor in critical_jobs_graph.nodes():
+                critical_jobs_graph.add_edge(job.job_name, successor)
+    start_node = time_zero_critical_jobs[0].job_name
+    T = nx.dfs_tree(critical_jobs_graph,start_node)
+    print(T.edges())
+
+def test_graph():
+    G = nx.DiGraph()
+    G.add_nodes_from([1,2,3,4,5,6])
+    G.add_edges_from([(1,2),(1,3),(3,2), (2,4), (3,4), (3,5), (4,6), (5,6)])
+    T = nx.dfs_tree(G,1)
+    print(T.edges())
 
 if __name__ == '__main__':
     job_list = parse_data()
     job_schedule_list, c_max = forward_procedure(job_list)
-    print("cmax", c_max)
-    backward_procedure(job_list, job_schedule_list,c_max)
+    job_schedule_list = backward_procedure(job_list, job_schedule_list,c_max)
+    critical_jobs_list, time_zero_critical_jobs = find_critical_jobs(job_schedule_list)
+    find_critical_paths(critical_jobs_list, time_zero_critical_jobs, job_list)
+    test_graph()
