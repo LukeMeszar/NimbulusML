@@ -128,17 +128,21 @@ def backward_procedure(job_list, job_schedule_list, c_max):
             backward_procedure_rec(job)
     return job_schedule_list
 
-def find_critical_jobs(job_schedule_list):
+def find_critical_jobs(job_schedule_list, c_max):
     critical_jobs_list = []
     time_zero_critical_jobs = []
+    time_cmax_critical_jobs = []
     for js in job_schedule_list:
         if js.earliest_starting_time == js.latest_starting_time:
             critical_jobs_list.append(js)
             if js.earliest_starting_time == 0:
                 time_zero_critical_jobs.append(js)
-    return critical_jobs_list, time_zero_critical_jobs
+            if js.latest_completion_time == c_max:
+                time_cmax_critical_jobs.append(js)
 
-def find_critical_paths(critical_jobs_list, time_zero_critical_jobs, job_list):
+    return critical_jobs_list, time_zero_critical_jobs, time_cmax_critical_jobs
+
+def build_critical_paths_graph(critical_jobs_list, job_list):
     def find_job_predecessors(job):
         for j in job_list:
             if j.job_name == job.job_name:
@@ -152,21 +156,37 @@ def find_critical_paths(critical_jobs_list, time_zero_critical_jobs, job_list):
         for successor in successors:
             if successor != 'e' and successor in critical_jobs_graph.nodes():
                 critical_jobs_graph.add_edge(job.job_name, successor)
-    start_node = time_zero_critical_jobs[0].job_name
-    T = nx.dfs_tree(critical_jobs_graph,start_node)
-    print(T.edges())
+    return critical_jobs_graph
 
-def test_graph():
-    G = nx.DiGraph()
-    G.add_nodes_from([1,2,3,4,5,6])
-    G.add_edges_from([(1,2),(1,3),(3,2), (2,4), (3,4), (3,5), (4,6), (5,6)])
-    T = nx.dfs_tree(G,1)
-    print(T.edges())
+def find_all_critical_paths(critical_jobs_graph, time_zero_critical_jobs, time_cmax_critical_jobs):
+
+    def find_all_paths(G,current_node,target_node,visited, path):
+        visited[current_node] = True
+        path.append(current_node)
+        if current_node == target_node:
+            all_paths.append(path[:])
+        else:
+            neighboring_nodes = G[current_node]
+            for neighbor in neighboring_nodes:
+                if visited[neighbor] == False:
+                    find_all_paths(G, neighbor, target_node, visited,path)
+        path.pop()
+        visited[current_node] = False
+    all_paths = []
+    for t_zero in time_zero_critical_jobs:
+        for t_cmax in time_cmax_critical_jobs:
+            visited = dict(zip(critical_jobs_graph.nodes(), [False]*critical_jobs_graph.number_of_nodes()))
+            path = []
+            find_all_paths(critical_jobs_graph, t_zero.job_name, t_cmax.job_name, visited, path)
+
+
+    return all_paths
+
 
 if __name__ == '__main__':
     job_list = parse_data()
     job_schedule_list, c_max = forward_procedure(job_list)
     job_schedule_list = backward_procedure(job_list, job_schedule_list,c_max)
-    critical_jobs_list, time_zero_critical_jobs = find_critical_jobs(job_schedule_list)
-    find_critical_paths(critical_jobs_list, time_zero_critical_jobs, job_list)
-    test_graph()
+    critical_jobs_list, time_zero_critical_jobs, time_cmax_critical_jobs = find_critical_jobs(job_schedule_list, c_max)
+    critical_jobs_graph = build_critical_paths_graph(critical_jobs_list, job_list)
+    print(find_all_critical_paths(critical_jobs_graph, time_zero_critical_jobs, time_cmax_critical_jobs))
