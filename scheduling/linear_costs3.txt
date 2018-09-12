@@ -1,0 +1,3 @@
+Name Processing_Max Processing_Min Cost_Max Cost_Min Successors Predecessors
+1 5 3 20 6 2 e
+2 6 5 25 23 e 1
