@@ -97,16 +97,57 @@ def build_linear_program(job_list, c0):
     bounds.append((0,None))
     return A, obj_func, bounds
 
+def build_linear_program_no_slack(job_list, c0):
+    num_jobs = len(job_list)
+    num_decision_variables = 2*num_jobs
+    #build A matrix
+    A = []
+    for job in job_list:
+        if job.successors != ['e']:
+            for successor in job.successors:
+                index = find_index_of_job(successor)
+                successor_job = job_list[index]
+                row = np.zeros(num_decision_variables +1)
+                row[successor_job.index] = 1
+                row[job.index] = -1
+                row[job.index+num_jobs] = -1
+                A.append(-1*row)
+    for job in job_list:
+        c_row = np.zeros(num_decision_variables + 1)
+        c_row[-1] = 1
+        c_row[job.index] = -1
+        c_row[job.index+num_jobs] = -1
+        #print(c_row)
+        A.append(-1*c_row)
+
+    #build objective function coefficients
+    obj_func = np.zeros(num_decision_variables + 1)
+    obj_func[-1] = c0
+    for job in job_list:
+        obj_func[job.index+num_jobs] = -job.marginal_cost
+    #compute bounds
+    bounds = []
+    #bounds for starting time variables
+    for i in range(0,num_jobs):
+        bounds.append((0,None))
+    #bounds for duration variables
+    for job in job_list:
+        duration_bound = (job.processing_min, job.processing_max)
+        bounds.append(duration_bound)
+    #bounds for slack variables
+    bounds.append((0,None))
+    return A, obj_func, bounds
+
 def solve_linear_program(A, obj_func, bounds, method="simplex"):
     b = np.zeros(len(A))
-    res = linprog(obj_func, A_eq=A,b_eq=b)
+    res = linprog(obj_func, A_ub=A,b_ub=b)
     print(res)
 
 if __name__ == '__main__':
     job_list = parse_data('linear_costs.txt')
     #compute_minimum_cost(job_list)
     compute_marginal_cost(job_list)
-    A, obj_func, bounds = build_linear_program(job_list, 6)
+    A, obj_func, bounds = build_linear_program_no_slack(job_list, 6)
     #print(A)
     matrix_form = "{"
     for row in A:
