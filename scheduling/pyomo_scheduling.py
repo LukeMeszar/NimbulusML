@@ -82,5 +82,6 @@ model.successors_constraint = Constraint(SL, rule=successors_constraint_rule)
 solver = SolverFactory('glpk')
 solver.solve(model)
 #model.pprint()
+print("Cmax: ", value(model.cmax['cmax']))
 for job in JN:
     print("job name: ", job, " starting time: ", value(model.x[job]), " processing time: ", value(model.p[job]))
